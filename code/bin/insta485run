@@ -1,0 +1,21 @@
+#!/bin/bash
+# insta485run
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+# Check if the database exists
+if [ ! -e ./var/insta485.sqlite3 ]; then
+    echo "Error: can't find database var/insta485.sqlite3"
+    echo "Try: ./bin/insta485db create"
+    exit 1
+fi
+
+# Start webpack in watch mode to automatically rebuild the front end when changes are detected
+echo "Starting webpack in watch mode..."
+npx webpack --watch &
+
+# Start the Flask server
+echo "Starting Flask development server..."
+flask --app insta485 --debug run --host 0.0.0.0 --port 8000

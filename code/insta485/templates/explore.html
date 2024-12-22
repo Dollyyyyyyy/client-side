@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+
+
+{% block content_style %}
+    .not_following {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        border: solid;
+        margin: auto;
+        width: 600px;
+        margin-top: 10px;
+    }
+
+    .not_following div {
+        padding: 8px;
+    }
+
+    .profile {
+        width: 50px;
+    }
+{% endblock content_style %}
+
+
+
+{% block content %}
+    <div style="width: 80%; margin: auto;">
+        <div>
+            <h1><b>Discover People</b></h1>
+        </div>
+
+        {% for entree in not_following %}
+        <div class="not_following">
+            <div>
+                <a href="{{ url_for('users', user_url_slug=entree.username) }}"><img src="{{ entree.user_img_url }}" alt="{{ entree.username }}_profile" class="profile"></a>
+            </div>
+
+            <div>
+                <a href="{{ url_for('users', user_url_slug=entree.username) }}"><b>{{ entree.username }}</b></a>
+            </div>
+
+            <div style="margin-left: auto;">
+                <form action="{{url_for('follow_unfollow', target='/explore/')}}" method="post" enctype="multipart/form-data">
+                    <input type="submit" name="follow" value="follow"/>
+                    <input type="hidden" name="username" value="{{entree.username}}"/>
+                    <input type="hidden" name="operation" value="follow"/>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

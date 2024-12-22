@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content_style %}
+.post {
+    border: solid;
+    margin: auto;
+    width: 600px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.post_bar {
+    display: flex;
+    align-items: center;
+    border: solid;
+}
+
+.profile_pic {
+    width: 50px;
+}
+
+.post_pic {
+    width: 600px;
+}
+
+.post_likes {
+    display: flex;
+    align-items: center;
+}
+
+
+{% endblock content_style %}
+
+{% block content %}
+
+<div id="reactEntry">
+    Loading ...
+</div>
+<!-- Load JavaScript -->
+<script src="{{ url_for('static', filename='js/bundle.js') }}"></script>
+
+{% endblock content %}

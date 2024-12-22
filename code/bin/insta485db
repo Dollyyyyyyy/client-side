@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+
+usage() {
+  echo "Usage: $0 (create|destroy|reset|dump|random)"
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+case $1 in
+  "create")
+    if [ -e ./var/insta485.sqlite3 ]; then
+      echo "Error: database already exists"
+      exit 1
+    fi
+    mkdir -p var/uploads
+    sqlite3 var/insta485.sqlite3 < sql/schema.sql
+    sqlite3 var/insta485.sqlite3 < sql/data.sql
+    cp sql/uploads/* var/uploads/
+    ;;
+
+  "destroy")
+    rm -rf var/insta485.sqlite3 var/uploads
+    ;;
+
+  "reset")
+    rm -rf var/insta485.sqlite3 var/uploads
+    mkdir -p var/uploads
+    sqlite3 var/insta485.sqlite3 < sql/schema.sql
+    sqlite3 var/insta485.sqlite3 < sql/data.sql
+    cp sql/uploads/* var/uploads/
+    ;;
+
+  "dump")
+    echo
+    echo "users:"
+    sqlite3 var/insta485.sqlite3 "SELECT * FROM users;"
+    echo
+    echo "posts:"
+    sqlite3 var/insta485.sqlite3 "SELECT * FROM posts;"
+    ;;
+
+  "random")
+    for i in {1..100}; do
+
+      random_str=$(head -c 20 /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c 13)
+
+      if ! command -v convert &> /dev/null; then
+        echo "Error: convert not found."
+        exit 1
+      fi
+
+      convert -size 100x100 xc:grey -gravity center -pointsize 20 \
+             -draw "text 0,0 '$random_str'" \
+             var/uploads/${random_str}.jpg || {
+               echo "Error: Failed to create image ${random_str}.jpg"
+               exit 1
+             }
+
+      sqlite3 var/insta485.sqlite3 \
+        "INSERT INTO posts (filename, owner) VALUES ('${random_str}.jpg', 'awdeorio');" || {
+          echo "Error: Failed to insert post into database"
+          exit 1
+        }
+    done
+    ;;
+
+  *)
+    usage
+    exit 1
+    ;;
+esac

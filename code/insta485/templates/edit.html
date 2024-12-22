@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content_style %}
+.content {
+    border: solid;
+    margin: auto;
+    width: 600px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+input {
+    width: 100%;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.content .header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.content .header div {
+    padding: 8px;
+}
+
+.profile {
+    width: 50px;
+}
+
+.bottom_bar {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+{% endblock content_style %}
+
+
+
+{% block content %}
+<div class="content">
+    <div class="header">
+        <div>
+            <a href="{{ url_for('users', user_url_slug=logname) }}"><img src="{{ user_img_url }}" alt="{{ logname }} profile" class="profile"></a>
+        </div>
+
+        <div>
+            <a href="{{ url_for('users', user_url_slug=logname) }}"><b>{{ logname }}</b></a>
+        </div>
+    </div>
+
+    <form action="{{ url_for('accounts', target=url_for('users', user_url_slug=logname)) }}" method="post" enctype="multipart/form-data">
+        <label for="ffile">profile picture (optional)</label>
+        <input type="file" id="ffile" name="file"/>
+        <label for="ffullname">fullname</label>
+        <input type="text" id="ffullname" name="fullname" required/>
+        <label for="femail">email <b>{{email_text}}</b></label>
+        <input type="text" id="femail" name="email" required/>
+        <input type="submit" name="update" value="submit"/>
+        <input type="hidden" name="operation" value="edit_account"/>
+    </form>
+
+    <div class="bottom_bar">
+        <div>
+            <form action="{{ url_for('password') }}" method="get" enctype="multipart/form-data">
+                <input type="submit" name="change_password" value="change password"/>
+            </form>
+        </div>
+        <div>
+            <form action="{{ url_for('delete') }}" method="get" enctype="multipart/form-data">
+                <input type="submit" name="delete_account" value="delete this account"/>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

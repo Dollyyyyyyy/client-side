@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>insta485</title>
+    <style>
+        .navigation_bar {
+            display: flex;
+            border: solid;
+        }
+
+        .navigation_bar div {
+            padding: 8px;
+        }
+
+        {% block content_style %}
+        {% endblock content_style %}
+    </style>
+</head>
+<body>
+    <div class="navigation_bar">
+        <div>
+            <a href="{{ url_for('show_index') }}">homepage</a>
+        </div>
+        <div style="margin-left: auto;">
+            <a href="{{ url_for('explore') }}">explore</a>
+        </div>
+        <div>
+            <a href="{{ url_for('users', user_url_slug=logname)}}">{{ logname }}</a>
+        </div>
+    </div>
+
+    {% block content %}
+    {% endblock content %}
+</body>
+</html>

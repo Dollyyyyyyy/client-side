@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content_style %}
+.entree {
+    display: flex;
+    border: solid;
+    width: 600px;
+    align-items: center;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.profile_pic {
+    width: 50px;
+}
+{% endblock content_style%}
+
+{% block content %}
+<h1>Followers of {{ username }}</h1>
+{% for follower in followers %}
+<div class="entree">
+    <div>
+        <a href="{{ url_for('users', user_url_slug=follower.username)}}"><img src="{{ follower.user_img_url }}" alt="{{ follower.username }} profile_pic" class="profile_pic"></a>
+    </div>
+    <div>
+        <a href="{{ url_for('users', user_url_slug=follower.username)}}"> {{ follower.username }} </a>
+    </div>
+    <div style="margin-left: auto; display: flex;  align-items: center;">
+        {% if follower.username == logname %}
+            <p>yourself</p>
+        {% elif follower.logname_follows_username %}
+        <div>
+            <p>following</p>
+        </div>
+        <div>
+            <form action="{{ url_for('follow_unfollow') }}?target={{ url_for('followers', user_url_slug=username) }}" method="post" enctype="multipart/form-data">
+                <input type="submit" name="unfollow" value="unfollow"/>
+                <input type="hidden" name="username" value="{{ follower.username }}"/>
+                <input type="hidden" name="operation" value="unfollow"/>
+            </form>
+        </div>
+        {% else %}
+        <div>
+            <p>not following</p>
+        </div>
+        <form action="{{ url_for('follow_unfollow') }}?target={{ url_for('followers', user_url_slug=username) }}" method="post" enctype="multipart/form-data">
+            <input type="submit" name="follow" value="follow"/>
+            <input type="hidden" name="username" value="{{ follower.username }}"/>
+            <input type="hidden" name="operation" value="follow"/>
+        </form>
+        {% endif %}
+    </div>
+
+</div>
+{% endfor %}
+{% endblock content %}

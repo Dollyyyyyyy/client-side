@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<style>
+    .navigation_links {
+        display: flex;
+        border: solid;
+    }
+
+    .navigation_links div{
+        padding: 8px;
+    }
+
+    .content {
+        border: solid;
+        margin: auto;
+        width: 600px;
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    input {
+        width: 100%;
+        margin: 10px;
+        box-sizing: border-box;
+    }
+
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title>insta485</title>
+</head>
+
+<body>
+    <div class="navigation_links">
+        <div>
+            <a href="/">homepage</a>
+        </div>
+
+        <div style="margin-left: auto;">
+            <a href="{{ url_for('login') }}">log in</a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <form action="{{ url_for('accounts', target=url_for('explore')) }}" method="post" enctype="multipart/form-data">
+            <label for="ffile">profile picture</label>
+            <input type="file" id="ffile" name="file" required/>
+            <label for="ffullname">fullname</label>
+            <input type="text" id="ffullname" name="fullname" required/>
+            <label for="fusername">username <b>{{username_text}}</b></label>
+            <input type="text" id="fusername" name="username" required/>
+            <label for="femail">email <b>{{email_text}}</b></label>
+            <input type="text" id="femail" name="email" required/>
+            <label for="fpassword">password</label>
+            <input type="password" id="fpassword" name="password" required/>
+            <input type="submit" name="signup" value="sign up"/>
+            <input type="hidden" name="operation" value="create"/>
+        </form>
+
+        <p>Have an account? <a href="{{ url_for('login') }}"><b>Log in</b></a></p>
+    </div>
+</body>
